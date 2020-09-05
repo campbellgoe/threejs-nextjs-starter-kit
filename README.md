@@ -25,5 +25,7 @@ This starter kit comes with the following:
   - onAnimationFrame callback for animating/rendering your three.js scene
   - onResize callback to ensure the canvas is the correct size on change to the browser width/height
 
+- Easily import Three.js example modules, such as Orbit Controls.
+
 - styled-components
   - This is useful for styling UI components, but you can swap it out for something else if you prefer.
