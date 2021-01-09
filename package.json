@@ -1,5 +1,5 @@
 {
-  "name": "threejs-nextjs-starter-kit",
+  "name": "glide-2d",
   "version": "1.0.0",
   "scripts": {
     "dev": "next",

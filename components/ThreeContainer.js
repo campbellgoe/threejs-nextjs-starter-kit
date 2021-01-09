@@ -16,6 +16,8 @@ function initCanvas(el){
 
   const camera = new THREE.PerspectiveCamera( fov, aspectRatio, near, far );
 
+  scene.add(camera)
+
   const renderer = new THREE.WebGLRenderer({ antialias: true });
 
   renderer.setSize( width, height );
