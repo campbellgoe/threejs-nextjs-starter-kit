@@ -3,18 +3,7 @@ import * as THREE from 'three';
 import { useRef, useState } from 'react'
 import { OrbitControls } from 'three/jsm/controls/OrbitControls.js'
 import genericShader, { uniforms as genericUniforms } from '../shaders/GenericShader'
-// camera must already be attached to scene for it to work
-function createShader(shaderMaterial) {
-  const geometry = new THREE.PlaneBufferGeometry(2,2,1,1);
-  const material = new THREE.ShaderMaterial(shaderMaterial);
-  const plane = new THREE.Mesh( geometry, material );
-  plane.rotation.y = Math.PI;
-  plane.rotation.x = Math.PI
-  // plane.position.x=0.5;
-  // plane.position.y=0.5;
-  plane.position.z=-0.5;
-  return plane
-}
+import makeShader from '../utils/makeShader'
 
 export default function Home() {
   const [scene, setScene] = useState(null);
@@ -45,12 +34,14 @@ export default function Home() {
         
         camera.position.z = 5;
 
-        const shader = createShader(genericShader)
+        const shader = makeShader(genericShader, {
+          materialOnly: false
+        })
 
-        scene.add(shader)
-        shader.material.renderOrder = 2
-
+        // cube.material = shaderMaterial
         camera.add(shader)
+
+        // const shader = cube
 
         const controls = new OrbitControls( camera, renderer.domElement );
         controls.update();
