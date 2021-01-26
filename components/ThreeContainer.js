@@ -20,13 +20,19 @@ function initCanvas(el){
 
   const renderer = new THREE.WebGLRenderer({ antialias: true });
 
+  // TODO: set render target to canvas width / height ??
+  const rtWidth = 512;
+  const rtHeight = 512;
+  const renderTarget = new THREE.WebGLRenderTarget(rtWidth, rtHeight);
+
   renderer.setSize( width, height );
 
   el.appendChild( renderer.domElement );
   return {
     scene,
     camera,
-    renderer
+    renderer,
+    renderTarget
   }
 }
 

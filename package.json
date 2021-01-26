@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "debounce": "^1.2.0",
+    "meyda": "^5.1.0",
     "next": "latest",
     "react": "^16.8.0",
     "react-dom": "^16.8.0",
