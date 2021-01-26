@@ -201,7 +201,7 @@ export default function Home() {
             const saturation = 55 + lightness * 20;//spectralCentroid*200*lightness
             const luminosity = normalisedSpectralCentroid * 50;//spectralCentroid*(y/height*normalisedSpectralCentroid*lightness * 16)
             const opacity = normalisedLoudness * 100;//normalisedLoudness**2 * 4
-            ctx.globalCompositeOperation = 'screen'
+            
             // ctx.shadowColor = spectralSkewness > 0 ? `rgba(255, 255, 255, .1)` : `rgba(0, 0, 0, .2)`;
             // ctx.shadowBlur = Math.sin(normalisedSpectralCentroid * Math.PI * 2) / 2 + .5;
             // ctx.shadowOffsetX = Math.sin(wave * Math.PI * 2) * wave;
@@ -213,11 +213,18 @@ export default function Home() {
             // ctx.lineTo(x, y + Math.cos(x / width * spectralSkewness * spectralCentroid) * spectralCentroid)
       for(let j = 0;j<6;j++){
         const n = j/6
-          ctx.lineWidth = Math.sin(n*Math.PI)*loudness.total/6 * wave
-          ctx.strokeStyle = `hsla(${hue-n*loudness.total}deg ${saturation}% ${luminosity}% / ${opacity}%)`
-          const yo = Math.cos(x / width * spectralSkewness * spectralCentroid * Math.PI*2) * spectralCentroid
-          ctx.moveTo(x, y)
-          ctx.lineTo(x, y +yo)
+        let lo =0
+        if(!j%2) {
+          ctx.globalCompositeOperation = 'screen'
+          lo = 25
+        }
+          ctx.lineWidth = Math.sin(n*Math.PI)*1
+          ctx.strokeStyle = `hsla(${hue-n*loudness.total}deg ${saturation}% ${luminosity+lo}% / ${opacity}%)`
+          const yo = Math.cos(x / width * spectralSkewness * spectralCentroid/x * Math.PI*2) * spectralCentroid * Math.sin(x)*lo/25
+          ctx.moveTo(y, x)
+          ctx.lineTo(y, x +yo)
+          ctx.moveTo(width-y, x)
+          ctx.lineTo(width-y, x +yo)
           ctx.stroke()
       }
             
