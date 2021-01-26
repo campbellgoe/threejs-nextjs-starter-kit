@@ -211,18 +211,18 @@ export default function Home() {
             // ctx.globalCompositeOperation = 'source-over'
             
             // ctx.lineTo(x, y + Math.cos(x / width * spectralSkewness * spectralCentroid) * spectralCentroid)
-      for(let j = 0;j<6;j++){
-        const n = j/6
+      for(let j = 0;j<3;j++){
+        const n = j/3
         let lo =0
         if(!j%2) {
           ctx.globalCompositeOperation = 'screen'
-          lo = 25
+          lo = 15
         }
-          ctx.lineWidth = Math.sin(n*Math.PI)*1
-          ctx.strokeStyle = `hsla(${hue-n*loudness.total}deg ${saturation}% ${luminosity+lo}% / ${opacity}%)`
+          ctx.lineWidth = Math.sin(n*Math.PI)*4
+          ctx.strokeStyle = `hsla(${hue-n*loudness.total}deg ${saturation}% ${luminosity+lo}% / ${opacity*0.8}%)`
           const yo = Math.cos(x / width * spectralSkewness * spectralCentroid/x * Math.PI*2) * spectralCentroid * Math.sin(x)*lo/25
           ctx.moveTo(y, x)
-          ctx.lineTo(y, x +yo)
+          ctx.lineTo(y+Math.sin(x/width*Math.PI*2)*spectralSkewness, x +yo)
           ctx.moveTo(width-y, x)
           ctx.lineTo(width-y, x +yo)
           ctx.stroke()
