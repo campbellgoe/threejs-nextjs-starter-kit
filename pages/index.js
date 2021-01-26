@@ -192,7 +192,7 @@ export default function Home() {
           for (let i = 0; i <= 256; i++) {
             const lightness = perceptualSharpness
             ctx.beginPath()
-            ctx.moveTo(x, y)
+            // ctx.moveTo(x, y)
       
             const wave = Math.sin(i / 256 * Math.PI * spectralCentroid * y / height) * rms * loudness.total * Math.sin(x / width * Math.PI) * lightness * (Math.cos(normalisedSpectralCentroid) * 8)
             y = height * (normalisedSpectralCentroid * normalisedLoudness - 1) + wave + height / 2
@@ -202,18 +202,25 @@ export default function Home() {
             const luminosity = normalisedSpectralCentroid * 50;//spectralCentroid*(y/height*normalisedSpectralCentroid*lightness * 16)
             const opacity = normalisedLoudness * 100;//normalisedLoudness**2 * 4
             ctx.globalCompositeOperation = 'screen'
-            ctx.shadowColor = spectralSkewness > 0 ? `rgba(255, 255, 255, .1)` : `rgba(0, 0, 0, .2)`;
-            ctx.shadowBlur = Math.sin(normalisedSpectralCentroid * Math.PI * 2) / 2 + .5;
-            ctx.shadowOffsetX = Math.sin(wave * Math.PI * 2) * wave;
-            ctx.shadowOffsetY = Math.sin(wave * Math.PI * 2) * wave;
+            // ctx.shadowColor = spectralSkewness > 0 ? `rgba(255, 255, 255, .1)` : `rgba(0, 0, 0, .2)`;
+            // ctx.shadowBlur = Math.sin(normalisedSpectralCentroid * Math.PI * 2) / 2 + .5;
+            // ctx.shadowOffsetX = Math.sin(wave * Math.PI * 2) * wave;
+            // ctx.shadowOffsetY = Math.sin(wave * Math.PI * 2) * wave;
       
             x = i / 256 * width
-      
-            ctx.lineWidth = loudness.total * wave
-            ctx.strokeStyle = `hsla(${hue}deg ${saturation}% ${luminosity}% / ${opacity}%)`
-      
-            ctx.lineTo(x, y + Math.cos(x / width * loudness.total) * spectralCentroid)
-            ctx.stroke()
+            // ctx.globalCompositeOperation = 'source-over'
+            
+            // ctx.lineTo(x, y + Math.cos(x / width * spectralSkewness * spectralCentroid) * spectralCentroid)
+      for(let j = 0;j<6;j++){
+        const n = j/6
+          ctx.lineWidth = Math.sin(n*Math.PI)*loudness.total/6 * wave
+          ctx.strokeStyle = `hsla(${hue-n*loudness.total}deg ${saturation}% ${luminosity}% / ${opacity}%)`
+          const yo = Math.cos(x / width * spectralSkewness * spectralCentroid * Math.PI*2) * spectralCentroid
+          ctx.moveTo(x, y)
+          ctx.lineTo(x, y +yo)
+          ctx.stroke()
+      }
+            
             ctx.globalCompositeOperation = 'source-over'
             ctx.closePath()
           }
@@ -243,7 +250,7 @@ export default function Home() {
       
         ctxB.scale(xScale, yScale)
         const rotate = true;//> 0.5
-        if (rotate) ctxB.rotate(Math.sin(angle + Math.sin(angle) * Math.PI * 2) * 0.15 * xScale * spectralFlatness)
+        if (rotate) ctxB.rotate(Math.sin(angle + Math.sin(angle) * Math.PI * 2)**2 * 0.04 * xScale * spectralFlatness)
         // draw canvas onto canvas b after translate + scale + rotation
         ctxB.drawImage(canvas, -tx, -ty)
         // undo rotation
@@ -289,16 +296,16 @@ export default function Home() {
 
     window.addEventListener('click', onClick)
 
-    return () => {
-      window.removeEventListener('click', onClick)
+    // return () => {
+    //   window.removeEventListener('click', onClick)
 
-      window.removeEventListener('resize', onResize)
-    }
+    //   window.removeEventListener('resize', onResize)
+    // }
   }, [])
 
   return <>
     <div ref={someElement}/>
-    <ThreeContainer
+    {/* <ThreeContainer
       onInit={({ scene, renderer, camera, renderTarget }) => {
 
         uniforms.iScene.value = renderTarget.texture
@@ -380,5 +387,6 @@ export default function Home() {
           renderer.render(scene, camera);
         }
       }}
-    /></>
+    /> */}
+    </>
 }
