@@ -20,7 +20,12 @@ import useDrawCanvas2D from "../scripts/useDrawCanvas2D";
 // }
 
 
-
+function getTexture(canvas) {
+  var tex = new THREE.Texture(canvas);
+  tex.needsUpdate = true;
+  tex.flipY = false;
+  return tex;
+}
 
 export default function Home() {
   const [scene, setScene] = useState(null);
@@ -30,7 +35,7 @@ export default function Home() {
   const [renderTarget, setRenderTarget] = useState(null)
   const someElement = useCallbackRef(null, () => {
 
-    const drawAudioData = useDrawCanvas2D()
+    const drawAudioData = () => null//useDrawCanvas2D()
         // set up audio stream from the mic (asks user)
     // process the audio with Meyda to extract features
     // draw the visualisation
@@ -54,6 +59,8 @@ export default function Home() {
     .catch(function (err) {
       // console.log('No mic for you!', err)
     });
+
+ 
 
     
     
@@ -92,7 +99,7 @@ export default function Home() {
 
   return <>
     <div ref={someElement}/>
-    {/* <ThreeContainer
+     <ThreeContainer
       onInit={({ scene, renderer, camera, renderTarget }) => {
 
         uniforms.iScene.value = renderTarget.texture
@@ -166,7 +173,9 @@ export default function Home() {
 
           cube.rotation.y += 0.01;
           uniforms.iTime.value = performance.now() / 1000
-          // currentUniforms.iScene.value = renderTarget.texture
+          uniforms.iScene.value = new THREE.Texture(renderer.domElement)
+          // shader.material.uniforms = uniforms
+          uniforms.iScene.value.needsUpdate = true;
           // for(let uniform in currentUniforms){
           //   shader.material.uniforms[uniform].value = currentUniforms[uniform];
           // }
@@ -174,6 +183,6 @@ export default function Home() {
           renderer.render(scene, camera);
         }
       }}
-    /> */}
+    />
     </>
 }

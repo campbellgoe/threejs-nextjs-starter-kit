@@ -1,9 +1,9 @@
-import { FrontSide, Vector2 } from "three"
+import { FrontSide, Vector2, Texture } from "three"
 
 export const uniforms = {
   iTime: { type: 'float', value: 0 },
   iResolution: { type: 'vec2', value: new Vector2() },
-  iScene: { type: 'sampler2D', value: null }
+  iScene: { type: 'sampler2D', value: new Texture() }
 }
 
 export default {
@@ -33,6 +33,7 @@ export default {
   #define PI 3.1415926538
 
   uniform float iTime;
+  uniform sampler2D iScene;
   uniform vec2 iResolution;
 
   float rand () {
@@ -62,7 +63,13 @@ export default {
           // float y = uv.y;
           // float t = iTime;
           // float val = y - (sin(x+t*2.)*.5);
-           fragColor = vec4(texture2D(iScene, uv));
+          // uv.x = uv.y;
+          uv.x = fract(uv.x*10.);
+           uv.y = fract(uv.y*10.);
+          vec4 tex = texture2D(iScene, uv);
+          tex.r += uv.x;
+           tex.g += uv.y;
+           fragColor = vec4(tex);
           // //;vec4(sin(uv.y+iTime), cos(uv.x-iTime+PI*.5), pow(sin(uv.y)+cos(uv.x), 2.), (.5-sin(uv.x+iTime))+(.5-cos(iTime-uv.y)));
       
     }
