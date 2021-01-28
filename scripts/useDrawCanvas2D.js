@@ -145,7 +145,7 @@ export default function useDrawCanvas2D(){
             const wave = Math.sin(i / 256 * Math.PI * spectralCentroid * y / height) * rms * loudness.total * Math.sin(x / width * Math.PI) * lightness * (Math.cos(normalisedSpectralCentroid) * 8)
             y = height * (normalisedSpectralCentroid * normalisedLoudness - 1) + wave + height / 2
       
-            const hue = y / height * 360;// normalisedLoudness * -1 * 260 + perceptualSharpness* 260
+            const hue = y / height * 360 + Math.cos(Date.now()/21000)*360;// normalisedLoudness * -1 * 260 + perceptualSharpness* 260
             const saturation = 55 + lightness * 20;//spectralCentroid*200*lightness
             const luminosity = normalisedSpectralCentroid * 50;//spectralCentroid*(y/height*normalisedSpectralCentroid*lightness * 16)
             const opacity = normalisedLoudness * 100;//normalisedLoudness**2 * 4
@@ -205,7 +205,7 @@ export default function useDrawCanvas2D(){
       
         ctxB.scale(xScale, yScale)
         const rotate = true;//> 0.5
-        if (rotate) ctxB.rotate(Math.sin(angle + Math.sin(angle) * Math.PI * 2)**2 * 0.04 * xScale * spectralFlatness)
+        if (rotate) ctxB.rotate(Math.sin(angle + Math.sin(angle) * Math.PI * 2)**(Math.cos(tx-ty)*2+1)* 0.04 * spectralFlatness)
         // draw canvas onto canvas b after translate + scale + rotation
         ctxB.drawImage(canvas, -tx, -ty)
         // undo rotation
