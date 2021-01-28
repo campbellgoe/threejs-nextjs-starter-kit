@@ -33,39 +33,32 @@ export default function Home() {
   const [camera, setCamera] = useState(null);
   const [sceneData, setSceneData] = useState(null);
   const [renderTarget, setRenderTarget] = useState(null)
-  const someElement = useCallbackRef(null, () => {
-
-    const drawAudioData = () => null//useDrawCanvas2D()
-        // set up audio stream from the mic (asks user)
-    // process the audio with Meyda to extract features
-    // draw the visualisation
-    navigator.mediaDevices.getUserMedia({ audio: true })
-    .then(function (stream) {
-      // console.log('You let me use your mic!', stream)
-      const audioCtx = new AudioContext();
-      const audioSource = audioCtx.createMediaStreamSource(stream);
-      // // console.log('audioSource', audioSource)
-      audioSource.connect(audioCtx.destination)
-      const analyzer = Meyda.createMeydaAnalyzer({
-        "audioContext": audioCtx,
-        "source": audioSource,
-        "bufferSize": 512,
-        "featureExtractors": ["loudness", "spectralCentroid", "chroma", "rms", "energy", "perceptualSharpness", "zcr", "spectralFlatness", "spectralSkewness"],
-        "callback": features => drawAudioData(features)
-
+  const {drawAudioData, canvas} = useDrawCanvas2D()
+  useEffect(() => {
+    if(drawAudioData && canvas){
+      navigator.mediaDevices.getUserMedia({ audio: true })
+      .then(function (stream) {
+        // console.log('You let me use your mic!', stream)
+        const audioCtx = new AudioContext();
+        const audioSource = audioCtx.createMediaStreamSource(stream);
+        // // console.log('audioSource', audioSource)
+        audioSource.connect(audioCtx.destination)
+        const analyzer = Meyda.createMeydaAnalyzer({
+          "audioContext": audioCtx,
+          "source": audioSource,
+          "bufferSize": 512,
+          "featureExtractors": ["loudness", "spectralCentroid", "chroma", "rms", "energy", "perceptualSharpness", "zcr", "spectralFlatness", "spectralSkewness"],
+          "callback": features => drawAudioData(features)
+  
+        });
+        analyzer.start();
+      })
+      .catch(function (err) {
+        // console.log('No mic for you!', err)
       });
-      analyzer.start();
-    })
-    .catch(function (err) {
-      // console.log('No mic for you!', err)
-    });
+    }
+  }, [drawAudioData, canvas])
 
- 
-
-    
-    
-    
-  })
   // const onAudioProcessed = useCallback(features => {
   //   if(data.current.canvas){
       
@@ -98,7 +91,7 @@ export default function Home() {
   }, [])
 
   return <>
-    <div ref={someElement}/>
+    <div/>
      <ThreeContainer
       onInit={({ scene, renderer, camera, renderTarget }) => {
 
@@ -173,7 +166,10 @@ export default function Home() {
 
           cube.rotation.y += 0.01;
           uniforms.iTime.value = performance.now() / 1000
-          uniforms.iScene.value = new THREE.Texture(renderer.domElement)
+          if (typeof canvas !== 'undefined') {
+            console.log('canvas', canvas)
+            uniforms.iScene.value = new THREE.Texture(canvas)
+          }
           // shader.material.uniforms = uniforms
           uniforms.iScene.value.needsUpdate = true;
           // for(let uniform in currentUniforms){

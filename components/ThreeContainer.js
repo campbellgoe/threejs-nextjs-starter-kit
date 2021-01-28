@@ -36,7 +36,7 @@ function initCanvas(el){
   }
 }
 
-const ThreeContainer = ({ onInit, onAnimationFrame, onResize }) => {
+const ThreeContainer = ({ onInit, onAnimationFrame, onResize, animationDeps }) => {
   const [mountEl, setMountEl] = useState(null);
   const mountRef = useCallbackRef(null, el => {
     if(el){
@@ -48,7 +48,7 @@ const ThreeContainer = ({ onInit, onAnimationFrame, onResize }) => {
       onInit(initCanvas(mountEl))
     }
   }, [mountEl])
-  useAnimationFrame(true, onAnimationFrame);
+  useAnimationFrame(true, onAnimationFrame, animationDeps);
   const { width, height } = useResize(true);
   useEffect(()=>{
     onResize(width, height);

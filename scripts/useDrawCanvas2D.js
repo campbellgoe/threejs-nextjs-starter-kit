@@ -1,3 +1,5 @@
+import { useEffect, useState } from "react";
+
 function generateCanvas(el) {
   const canvas = document.createElement('canvas')
   const ctx = canvas.getContext('2d')
@@ -10,14 +12,12 @@ function generateCanvas(el) {
   return { canvas, ctx }
 }
 export default function useDrawCanvas2D(){
-  const { canvas, ctx } = generateCanvas(document.documentElement)
-    const { canvas: canvasB, ctx: ctxB } = generateCanvas()
-    function onResize() {
-      canvas.width = window.innerWidth
-      canvas.height = window.innerHeight
-    }
-    window.addEventListener('resize', onResize)
-    window.removeEventListener('resize', onResize)
+  const [data, setData] = useState(null)
+  useEffect(() => {
+    if(document){
+      const { canvas, ctx } = generateCanvas(document.documentElement)
+      const { canvas: canvasB, ctx: ctxB } = generateCanvas()
+      setData({ canvas, ctx, canvasB, ctxB, drawAudioData })
       function drawAudioData({
         chroma,
         loudness,
@@ -225,5 +225,21 @@ export default function useDrawCanvas2D(){
       
         // frame++;
       }
-     return drawAudioData
+      function onResize() {
+        canvas.width = window.innerWidth
+        canvas.height = window.innerHeight
+      }
+      window.addEventListener('resize', onResize)
+      
+      return () => {
+        window.removeEventListener('resize', onResize)
+      }
+    }
+  }, [])
+  
+    if(data){
+      return data
+    }
+      
+     return {}
 }
