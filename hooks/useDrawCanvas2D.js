@@ -136,16 +136,15 @@ export default function useDrawCanvas2D(){
           let x = 0
           let y = height * (normalisedSpectralCentroid * normalisedLoudness - 1) + 0 + height / 2
       
-      
-          for (let i = 0; i <= 256; i++) {
+          const nLines = 25
+          for (let i = 0; i <= nLines; i++) {
             const lightness = perceptualSharpness
             ctx.beginPath()
             // ctx.moveTo(x, y)
-      
-            const wave = Math.sin(i / 256 * Math.PI * spectralCentroid * y / height) * rms * loudness.total * Math.sin(x / width * Math.PI) * lightness * (Math.cos(normalisedSpectralCentroid) * 8)
+            const wave = Math.sin(i / nLines * Math.PI * spectralCentroid * y / height) * rms * loudness.total * Math.sin(x / width * Math.PI) * lightness * (Math.cos(normalisedSpectralCentroid) * 8)
             y = height * (normalisedSpectralCentroid * normalisedLoudness - 1) + wave + height / 2
       
-            const hue = y / height * 360;// normalisedLoudness * -1 * 260 + perceptualSharpness* 260
+            const hue = y / height * 360 + (performance.now()/100)*Math.sin(performance.now()/21000);// normalisedLoudness * -1 * 260 + perceptualSharpness* 260
             const saturation = 55 + lightness * 20;//spectralCentroid*200*lightness
             const luminosity = normalisedSpectralCentroid * 50;//spectralCentroid*(y/height*normalisedSpectralCentroid*lightness * 16)
             const opacity = normalisedLoudness * 100;//normalisedLoudness**2 * 4
@@ -155,9 +154,11 @@ export default function useDrawCanvas2D(){
             // ctx.shadowOffsetX = Math.sin(wave * Math.PI * 2) * wave;
             // ctx.shadowOffsetY = Math.sin(wave * Math.PI * 2) * wave;
       
-            x = i / 256 * width
+            x = i / nLines * width
+            y = i / nLines * height
             // ctx.globalCompositeOperation = 'source-over'
-            
+            // x += 
+            // y += Math.cos(performance.now()/1000)*height*0.8
             // ctx.lineTo(x, y + Math.cos(x / width * spectralSkewness * spectralCentroid) * spectralCentroid)
       for(let j = 0;j<3;j++){
         const n = j/3
@@ -169,10 +170,10 @@ export default function useDrawCanvas2D(){
           ctx.lineWidth = Math.sin(n*Math.PI)*4
           ctx.strokeStyle = `hsla(${hue-n*loudness.total}deg ${saturation}% ${luminosity+lo}% / ${opacity*0.8}%)`
           const yo = Math.cos(x / width * spectralSkewness * spectralCentroid/x * Math.PI*2) * spectralCentroid * Math.sin(x)*lo/25
-          ctx.moveTo(y, x)
-          ctx.lineTo(y+Math.sin(x/width*Math.PI*2)*spectralSkewness, x +yo)
-          ctx.moveTo(width-y, x)
-          ctx.lineTo(width-y, x +yo)
+          // ctx.moveTo(y, x)
+          // ctx.lineTo(y+Math.sin(x/width*Math.PI*2)*spectralSkewness, x +yo)
+          ctx.moveTo(width/2+Math.sin(x)*width/2*spectralSkewness, height/spectralCentroid+Math.cos(y*spectralCentroid)*height/2*spectralSkewness)
+          ctx.lineTo(width/2+Math.cos(Date.now()/4000*Math.PI*2)*width/2, height/2+Math.sin(Date.now()/2000*Math.PI*2)*height)
           ctx.stroke()
       }
             
@@ -188,7 +189,7 @@ export default function useDrawCanvas2D(){
       
         // ctxB.fillStyle=`rgb(0,0,0,${(normalisedLoudness**2*.5)*0.9})`
         ctxB.clearRect(0, 0, width, height)
-        const zoom = (normalisedZcr * spectralFlatness ** 2 * normalisedLoudness)
+        const zoom = (normalisedZcr * spectralFlatness ** 2 * spectralSkewness)
         const angle = normalisedZcr * Math.PI + spectralFlatness * Math.PI
         const xScale = Math.sin(angle) * 1 * zoom + Math.cos(angle) * 0.1 + 0.9
         const yScale = Math.cos(angle) * 1 * zoom + Math.sin(angle) * 0.1 + 0.9

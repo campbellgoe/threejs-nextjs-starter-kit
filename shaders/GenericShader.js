@@ -66,8 +66,7 @@ export default {
           // float val = y - (sin(x+t*2.)*.5);
           // uv.x = uv.y;
           // uv.x = fract(uv.x*1.01);
-          //  uv.y = fract(uv.y*1.01);
-          uv.x += sin(uv.y*PI*2.-uv.x*PI*3.)*(iLoudness/24.);
+            
           vec4 tex = texture2D(iScene, uv);
           //tex.r += uv.x;
           // tex.g += uv.y;
