@@ -64,10 +64,12 @@ export default {
           // float t = iTime;
           // float val = y - (sin(x+t*2.)*.5);
           // uv.x = uv.y;
-          // uv.x = fract(uv.x*1.01);
-          //  uv.y = fract(uv.y*1.01);
-          uv.x += sin(uv.y*PI*2.+uv.x*PI*2.)*0.01;
+          // 
           vec4 tex = texture2D(iScene, uv);
+          uv.x = fract(uv.x*(cos(tex.g)*0.4+1.));
+            uv.y = fract(uv.y*(sin(tex.r)*0.02+1.));
+          uv.x += sin(uv.y*PI*2.+uv.x*PI*2.)*0.01;
+          tex = texture2D(iScene, uv);
           //tex.r += uv.x;
           // tex.g += uv.y;
            fragColor = vec4(tex);

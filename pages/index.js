@@ -26,7 +26,7 @@ function getTexture(canvas) {
   tex.flipY = false;
   return tex;
 }
-function drawIntoVoid({ctx, canvas, w, h, r = 0, ox = 0, oy = 0}, t = Date.now(), amount = -8, alpha = 1, ){
+function drawIntoVoid({ctx, canvas, w, h, r = 0, ox = 0, oy = 0, ...features}, t = Date.now(), amount = -8, alpha = 1, ){
   // if(typeof r != 'number'){
   //   r = Math.sin(t/1000)*(Math.PI/50000);
   // }
@@ -36,6 +36,7 @@ function drawIntoVoid({ctx, canvas, w, h, r = 0, ox = 0, oy = 0}, t = Date.now()
   ctx.translate(-w/2 -ox, -h/2 -oy);
   ctx.globalAlpha = alpha;
   ctx.drawImage(canvas, amount, amount, w-(amount*2), h-(amount*2));
+  // ctx.rotate(-r);
 }
 export default function Home() {
   const [scene, setScene] = useState(null);
@@ -44,6 +45,7 @@ export default function Home() {
   const [sceneData, setSceneData] = useState(null);
   const [renderTarget, setRenderTarget] = useState(null)
   const {drawAudioData, canvas} = useDrawCanvas2D()
+  const audioFeatures = useRef({})
   useEffect(() => {
     if(drawAudioData && canvas){
       navigator.mediaDevices.getUserMedia({ audio: true })
@@ -58,7 +60,10 @@ export default function Home() {
           "source": audioSource,
           "bufferSize": 512,
           "featureExtractors": ["loudness", "spectralCentroid", "chroma", "rms", "energy", "perceptualSharpness", "zcr", "spectralFlatness", "spectralSkewness"],
-          "callback": features => drawAudioData(features)
+          "callback": features => {
+            drawAudioData(features)
+            audioFeatures.current = features
+          }
   
         });
         analyzer.start();
@@ -177,7 +182,7 @@ export default function Home() {
           cube.rotation.y += 0.01;
           uniforms.iTime.value = performance.now() / 1000
           if (typeof canvas !== 'undefined') {
-            console.log('canvas', canvas)
+            // console.log('canvas', canvas)
             uniforms.iScene.value = new THREE.Texture(canvas)
           }
           // shader.material.uniforms = uniforms
@@ -188,12 +193,14 @@ export default function Home() {
 
           renderer.render(scene, camera);
           if (typeof canvas !== 'undefined') {
+            const { spectralCentroid } = audioFeatures.current
             drawIntoVoid({ ctx: canvas.getContext('2d'), canvas: renderer.domElement,
               w: window.innerWidth,
               h: window.innerHeight,
-              r: 0.001,
+              r: Math.sin(Date.now()/3000*spectralCentroid)*0.001,
               ox: 0.99,
               oy: 0.99,
+              // ...audioFeatures.current
             })
           }
         }
