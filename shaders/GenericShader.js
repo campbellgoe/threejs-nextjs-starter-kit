@@ -66,7 +66,7 @@ export default {
           // uv.x = uv.y;
           // uv.x = fract(uv.x*1.01);
           //  uv.y = fract(uv.y*1.01);
-          uv.x += sin(uv.y*PI*2.)*0.1;
+          uv.x += sin(uv.y*PI*2.+uv.x*PI*2.)*0.01;
           vec4 tex = texture2D(iScene, uv);
           //tex.r += uv.x;
           // tex.g += uv.y;
