@@ -26,7 +26,17 @@ function getTexture(canvas) {
   tex.flipY = false;
   return tex;
 }
-
+function drawIntoVoid({ctx, canvas, w, h, r = 0}, t = Date.now(), amount = -8, alpha = 1){
+  // if(typeof r != 'number'){
+  //   r = Math.sin(t/1000)*(Math.PI/50000);
+  // }
+  //let mag = 1;//t%24000 < 12000 ? 4 : 64;
+  ctx.translate(w/2, h/2);
+  ctx.rotate(r);
+  ctx.translate(-w/2, -h/2);
+  ctx.globalAlpha = alpha;
+  ctx.drawImage(canvas, amount, amount, w-(amount*2), h-(amount*2));
+}
 export default function Home() {
   const [scene, setScene] = useState(null);
   const [renderer, setRenderer] = useState(null);
@@ -177,6 +187,13 @@ export default function Home() {
           // }
 
           renderer.render(scene, camera);
+          if (typeof canvas !== 'undefined') {
+            drawIntoVoid({ ctx: canvas.getContext('2d'), canvas: renderer.domElement,
+              w: window.innerWidth,
+              h: window.innerHeight,
+              r: 0
+            })
+          }
         }
       }}
     />

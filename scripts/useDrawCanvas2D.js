@@ -128,7 +128,7 @@ export default function useDrawCanvas2D(){
         // drawBrightness()
       
         function drawLines() {
-          console.log('perceptualSharpness', perceptualSharpness, 'spectralCentroid', spectralCentroid)
+          //console.log('perceptualSharpness', perceptualSharpness, 'spectralCentroid', spectralCentroid)
       
           // console.log(normalisedSpectralCentroid, 'and', normalisedLoudness, 'res', (normalisedSpectralCentroid*normalisedLoudness - 1) * -1)
       
@@ -183,7 +183,7 @@ export default function useDrawCanvas2D(){
       
         drawLines()
         ctx.restore()
-        console.log('spectralFlatness', spectralFlatness)
+        //console.log('spectralFlatness', spectralFlatness)
       
       
         // ctxB.fillStyle=`rgb(0,0,0,${(normalisedLoudness**2*.5)*0.9})`
