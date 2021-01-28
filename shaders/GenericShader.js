@@ -1,9 +1,12 @@
 import { FrontSide, Vector2, Texture } from "three"
 
+import jsonToGlsl from '../scripts/jsonToGlsl'
+
 export const uniforms = {
   iTime: { type: 'float', value: 0 },
   iResolution: { type: 'vec2', value: new Vector2() },
-  iScene: { type: 'sampler2D', value: new Texture() }
+  iScene: { type: 'sampler2D', value: new Texture() },
+  iLoudness: { type: 'float', value: 0 }
 }
 
 export default {
@@ -32,9 +35,7 @@ export default {
 
   #define PI 3.1415926538
 
-  uniform float iTime;
-  uniform sampler2D iScene;
-  uniform vec2 iResolution;
+  ${jsonToGlsl({uniforms})}
 
   float rand () {
     return fract(sin(iTime)*1e4);
@@ -66,7 +67,7 @@ export default {
           // uv.x = uv.y;
           // uv.x = fract(uv.x*1.01);
           //  uv.y = fract(uv.y*1.01);
-          uv.x += sin(uv.y*PI*2.+uv.x*PI*2.)*0.01;
+          uv.x += sin(uv.y*PI*2.-uv.x*PI*3.)*(iLoudness/24.);
           vec4 tex = texture2D(iScene, uv);
           //tex.r += uv.x;
           // tex.g += uv.y;
