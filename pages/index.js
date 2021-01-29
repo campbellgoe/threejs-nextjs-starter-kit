@@ -81,14 +81,29 @@ export default function Home() {
         if(renderer && scene && camera && sceneData){
           const { scene1: { cube, shader } } = sceneData;
           
-          cube.rotation.y += 0.01;
+          // cube.rotation.y += 0.01;
           const currentUniforms = uniforms.current
-          currentUniforms.iTime.value = performance.now()/1000
+          // currentUniforms.iTime.value = performance.now()/1000
           // for(let uniform in currentUniforms){
           //   shader.material.uniforms[uniform].value = currentUniforms[uniform];
           // }
 
-          renderer.render( scene, camera );
+          // renderer.render( scene, camera );
+          if(currentUniforms){
+            currentUniforms.iTime.value = performance.now() / 1000
+            currentUniforms.iScene.value = new THREE.Texture(renderer.domElement)
+            
+            // shader.material.uniforms = uniforms
+            currentUniforms.iScene.value.needsUpdate = true;
+          }
+          // for(let uniform in currentUniforms){
+          //   shader.material.uniforms[uniform].value = currentUniforms[uniform];
+          // }
+          // 
+          renderer.render(scene, camera);
+          //renderer.setRenderTarget(renderTarget)
+          //renderer.render(scene, camera);
+          // uniforms.iDistorted.value = new THREE.Texture(renderer.domElement)
         }
       }}
       />

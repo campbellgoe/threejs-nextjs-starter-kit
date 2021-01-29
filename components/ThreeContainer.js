@@ -21,7 +21,7 @@ function initCanvas(el){
   const renderer = new THREE.WebGLRenderer({ antialias: true });
 
   renderer.setSize( width, height );
-
+  renderer.autoClear = false;
   el.appendChild( renderer.domElement );
   return {
     scene,

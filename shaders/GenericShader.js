@@ -1,8 +1,9 @@
-import { FrontSide, Vector2 } from "three"
-
+import { FrontSide, Vector2, Texture } from "three"
+import uniformsToGlsl from '../utils/uniformsToGlsl.js'
 export const uniforms = {
   iTime: { type: 'float', value: 0 },
-  iResolution: { type: 'vec2', value: new Vector2() }
+  iResolution: { type: 'vec2', value: new Vector2() },
+  iScene: { type: 'sampler2D', value: new Texture() }
 }
 
 export default {
@@ -28,8 +29,7 @@ export default {
   precision mediump float;
   #endif
 
-  uniform float iTime;
-  uniform vec2 iResolution;
+  ${uniformsToGlsl({uniforms})}
 
   float rand () {
     return fract(sin(iTime)*1e4);
@@ -38,21 +38,32 @@ export default {
   {
     vec2 uv = fragCoord.xy / iResolution.xy;
       
-    vec4 color = vec4(0.075,0.075,0.075,0.5);
-    
-    float strength = 20.0;
-    
-    float x = (uv.x + 4.0 ) * (uv.y + 4.0 ) * (iTime * 10.0);
-    vec4 grain = vec4(mod((mod(x, 13.0) + 1.0) * (mod(x, 123.0) + 1.0), 0.01)-0.005) * strength;
-      
-    float scanline = sin( uv.y * 800.0 * rand())/12.0;
-    color += grain;
-    color *= 1. - scanline;
-    // grain = 1.0 - grain;
-  
-    // fragColor = color * grain;
-    color.r = 1.0*uv.x;
-    fragColor = color;
+          //     // vec4 color = vec4(0.075,0.075,0.075,0.5);
+              
+          //     // float strength = 20.0;
+              
+          //     // float x = (uv.x + 4.0 ) * (uv.y + 4.0 ) * (iTime * 10.0);
+          //     // vec4 grain = vec4(mod((mod(x, 13.0) + 1.0) * (mod(x, 123.0) + 1.0), 0.01)-0.005) * strength;
+                
+          //     // float scanline = sin( uv.y * 800.0 * rand())/12.0;
+          //     // color += grain;
+          //     // color *= 1. - scanline;
+          //     // // grain = 1.0 - grain;
+            
+          //     // // fragColor = color * grain;
+          //     // color.r = 1.0*uv.x;
+          //     // //fragColor = color;
+          // float x = uv.x;
+          // float y = uv.y;
+          // float t = iTime;
+          // float val = y - (sin(x+t*2.)*.5);
+          // uv.x = uv.y;
+          // uv.x = fract(uv.x*1.1);
+     uv.y = fract(uv.y*2.);
+    vec4 tex = texture2D(iScene, uv);
+          // tex.r += uv.x;
+          //  tex.g += uv.y
+    fragColor = vec4(tex.rgb, 0.5);
   }
 
   void main() {
