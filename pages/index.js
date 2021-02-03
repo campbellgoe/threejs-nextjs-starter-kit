@@ -14,11 +14,14 @@ export default function Home() {
 
   return <ThreeContainer
       onInit={({ scene, renderer, camera })=>{
-
+        const canvas = renderer.domElement;
+        canvas.style.left = '50%'
+        canvas.style.top = '50%'
+        canvas.style.transform = 'translate(-50%, -50%)'
         renderer.setPixelRatio(window.devicePixelRatio)
-
-        const geometry = new THREE.BoxGeometry();
-        const material = new THREE.MeshStandardMaterial( { color: 0x00ff00 } );
+        const texture = new THREE.TextureLoader().load( '/boxes.png' );
+        const geometry = new THREE.BoxGeometry(0.01, 0.01, 0.01);
+        const material = new THREE.MeshStandardMaterial( { map: texture } );
         const cube = new THREE.Mesh( geometry, material );
 
         const ambientLight = new THREE.AmbientLight( 0x404040 ); // soft white light
@@ -32,7 +35,8 @@ export default function Home() {
 
         scene.add( cube );
         
-        camera.position.z = 5;
+        camera.position.z = 0.1;
+        camera.zoom = 16
 
         const shader = makeShader(genericShader, {
           materialOnly: false
@@ -45,6 +49,12 @@ export default function Home() {
 
         const controls = new OrbitControls( camera, renderer.domElement );
         controls.update();
+
+        const size = 0.1;
+        const divisions = 10;
+
+        const gridHelper = new THREE.GridHelper( size, divisions );
+        scene.add( gridHelper );
         
         //  scene.add(camera)
 // console.log(camera, shader)
@@ -60,20 +70,20 @@ export default function Home() {
             geometry,
             material,
             cube,
-            shader
+            shader,
+            gridHelper
           }
         }))
       }}
-      onResize={(width, height) => {
-        const resolution = uniforms.current.iResolution.value;
-        resolution.set(width, height)
+      onResize={(width, height, minWH) => {
+        // const resolution = uniforms.current.iResolution.value;
         if(renderer && camera){
-          renderer.setSize(width, height);
+          renderer.setSize( minWH, minWH );
           const canvas = renderer.domElement;
-          canvas.style.width = '100%';
-          canvas.style.height = '100%';
+          canvas.width = minWH;
+          canvas.height = minWH;
           canvas.style.position = 'absolute';
-          camera.aspect = width / height;
+          camera.aspect = 1;//width / height;
           camera.updateProjectionMatrix();
         }
       }}

@@ -13,14 +13,16 @@ function initCanvas(el){
   const aspectRatio = width / height;
 
   const scene = new THREE.Scene();
+  // TODO: make camera perspective optional
+  const camera = new THREE.OrthographicCamera( - 1, 1, 1, - 1, 0, 1 );
 
-  const camera = new THREE.PerspectiveCamera( fov, aspectRatio, near, far );
+  
 
   scene.add(camera)
 
   const renderer = new THREE.WebGLRenderer({ antialias: true });
-
-  renderer.setSize( width, height );
+  const minWH = Math.min(width, height)
+  renderer.setSize( minWH, minWH );
   renderer.autoClear = false;
   el.appendChild( renderer.domElement );
   return {
@@ -43,9 +45,11 @@ const ThreeContainer = ({ onInit, onAnimationFrame, onResize }) => {
     }
   }, [mountEl])
   useAnimationFrame(true, onAnimationFrame);
+  
   const { width, height } = useResize(true);
+  const minWH = Math.min(width, height)
   useEffect(()=>{
-    onResize(width, height);
+    onResize(width, height, minWH);
   }, [width, height])
   return <div ref={mountRef}/>
 }
