@@ -36,7 +36,6 @@ export default function Home() {
         scene.add( cube );
         
         camera.position.z = 0.1;
-        camera.zoom = 16
 
         const shader = makeShader(genericShader, {
           materialOnly: false

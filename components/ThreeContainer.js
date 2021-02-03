@@ -8,13 +8,13 @@ function initCanvas(el){
   const width = window.innerWidth;
   const height = window.innerHeight;
   const fov = 75;
-  const near = 0.1;
+  const near = 0.01;
   const far = 1000;
   const aspectRatio = width / height;
 
   const scene = new THREE.Scene();
   // TODO: make camera perspective optional
-  const camera = new THREE.OrthographicCamera( - 1, 1, 1, - 1, 0, 1 );
+  const camera = new THREE.PerspectiveCamera( fov, aspectRatio, near, far );
 
   
 
