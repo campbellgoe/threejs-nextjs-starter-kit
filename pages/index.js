@@ -197,9 +197,9 @@ export default function Home() {
             drawIntoVoid({ ctx: canvas.getContext('2d'), canvas: renderer.domElement,
               w: window.innerWidth,
               h: window.innerHeight,
-              r: Math.sin(Date.now()/3000*spectralCentroid)*0.001,
-              ox: 0.99,
-              oy: 0.99,
+              r: Math.sin(Date.now()/60000*spectralCentroid)*0.0003,
+              ox: 0.999,
+              oy: 0.999,
               // ...audioFeatures.current
             })
           }
