@@ -32,7 +32,7 @@ function drawIntoVoid({ctx, canvas, w, h, r = 0, ox = 0, oy = 0}, t = Date.now()
   // }
   //let mag = 1;//t%24000 < 12000 ? 4 : 64;
   ctx.translate(w/2 + ox, h/2 + oy);
-  ctx.rotate(r);
+  ctx.rotate(r*0.0001);
   ctx.translate(-w/2 -ox, -h/2 -oy);
   ctx.globalAlpha = alpha;
   ctx.drawImage(canvas, amount, amount, w-(amount*2), h-(amount*2));
@@ -52,7 +52,7 @@ export default function Home() {
         const audioCtx = new AudioContext();
         const audioSource = audioCtx.createMediaStreamSource(stream);
         // // console.log('audioSource', audioSource)
-        audioSource.connect(audioCtx.destination)
+        //audioSource.connect(audioCtx.destination)
         const analyzer = Meyda.createMeydaAnalyzer({
           "audioContext": audioCtx,
           "source": audioSource,
@@ -191,9 +191,9 @@ export default function Home() {
             drawIntoVoid({ ctx: canvas.getContext('2d'), canvas: renderer.domElement,
               w: window.innerWidth,
               h: window.innerHeight,
-              r: 0.001,
-              ox: 0.99,
-              oy: 0.99,
+              r: 0.0001,
+              ox: 0.998,
+              oy: 0.998,
             })
           }
         }

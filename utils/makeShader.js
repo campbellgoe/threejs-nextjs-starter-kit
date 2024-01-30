@@ -4,7 +4,7 @@ export default function makeShader(shaderMaterial, { materialOnly }) {
   if(materialOnly){
     return material
   }
-  const geometry = new THREE.PlaneBufferGeometry(2,2,1,1);
+  const geometry = new THREE.PlaneGeometry(2,2,1,1);
   const shaderPlane = new THREE.Mesh( geometry, material );
   shaderPlane.rotation.y = Math.PI;
   shaderPlane.rotation.x = Math.PI
