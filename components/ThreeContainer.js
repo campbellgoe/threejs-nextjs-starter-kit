@@ -20,17 +20,23 @@ function initCanvas(el){
 
   const renderer = new THREE.WebGLRenderer({ antialias: true });
 
+  // TODO: set render target to canvas width / height ??
+  const rtWidth = 512;
+  const rtHeight = 512;
+  const renderTarget = new THREE.WebGLRenderTarget(rtWidth, rtHeight);
+
   renderer.setSize( width, height );
 
   el.appendChild( renderer.domElement );
   return {
     scene,
     camera,
-    renderer
+    renderer,
+    renderTarget
   }
 }
 
-const ThreeContainer = ({ onInit, onAnimationFrame, onResize }) => {
+const ThreeContainer = ({ onInit, onAnimationFrame, onResize, animationDeps }) => {
   const [mountEl, setMountEl] = useState(null);
   const mountRef = useCallbackRef(null, el => {
     if(el){
@@ -42,7 +48,7 @@ const ThreeContainer = ({ onInit, onAnimationFrame, onResize }) => {
       onInit(initCanvas(mountEl))
     }
   }, [mountEl])
-  useAnimationFrame(true, onAnimationFrame);
+  useAnimationFrame(true, onAnimationFrame, animationDeps);
   const { width, height } = useResize(true);
   useEffect(()=>{
     onResize(width, height);

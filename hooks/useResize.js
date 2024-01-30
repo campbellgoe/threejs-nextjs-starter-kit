@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { debounce } from 'debounce'
+import debounce from 'debounce'
 import iOS from '~/utils/isIOS'
 
 const useResize = (listen = true, deps = [true]) => {
