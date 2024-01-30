@@ -1,5 +1,5 @@
 {
-  "name": "glide-2d",
+  "name": "canvas-2d-webgl",
   "version": "1.0.0",
   "scripts": {
     "dev": "node --openssl-legacy-provider ./node_modules/.bin/next dev",
@@ -19,9 +19,6 @@
   },
   "devDependencies": {
     "babel-plugin-styled-components": "^2.1.4"
-  },
-  "engines": {
-    "node": "16.x"
   },
   "license": "MIT"
 }
